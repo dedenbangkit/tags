@@ -125,12 +125,11 @@
       background: #f8fafc;
       border: 1px solid #e2e8f0;
       border-radius: 2px;
-      transition: all 0.15s;
+      cursor: pointer;
     }
 
     .tag-item:hover {
       border-color: #cbd5e1;
-      background: #f1f5f9;
     }
 
     .tag-item.unsaved {
@@ -139,7 +138,7 @@
     }
 
     .tag-item.unsaved:hover {
-      background: #dcfce7;
+      border-color: #4ade80;
     }
 
     .tag-item.unsaved .tag-badge {
@@ -244,29 +243,73 @@
       text-transform: uppercase;
       letter-spacing: 0.03em;
       cursor: pointer;
-      transition: all 0.15s;
+      margin-left: auto;
     }
 
     .clear-btn:hover {
       background: #fef2f2;
     }
 
+    .search-container {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      min-height: 44px;
+      border-bottom: 1px solid #e2e8f0;
+      background: #f8fafc;
+    }
+
+    .search-container:has(.search-tag) {
+      min-height: 80px;
+      align-content: flex-start;
+    }
+
+    .search-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 8px;
+      background: #e0e7ff;
+      border: 1px solid #818cf8;
+      border-radius: 2px;
+      font-size: 12px;
+      color: #4338ca;
+    }
+
+    .search-tag-remove {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 14px;
+      height: 14px;
+      background: transparent;
+      border: none;
+      font-size: 14px;
+      line-height: 1;
+      color: #6366f1;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .search-tag-remove:hover {
+      color: #4338ca;
+    }
+
     .search-input {
-      padding: 10px 14px;
       border: none;
       font-size: 12px;
       outline: none;
       flex: 1;
-      min-width: 0;
+      min-width: 100px;
       color: #334155;
+      background: transparent;
+      padding: 4px 0;
     }
 
     .search-input::placeholder {
       color: #94a3b8;
-    }
-
-    .search-input:focus {
-      background: #f8fafc;
     }
 
     .preview-section {
@@ -327,7 +370,7 @@
     }
 
     .tag-item.selected:hover {
-      background: #c7d2fe;
+      border-color: #6366f1;
     }
 
     .tag-item.editing {
@@ -389,6 +432,26 @@
       display: flex;
     }
 
+    .cancel-selection-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      background: transparent;
+      border: 1px solid #cbd5e1;
+      border-radius: 2px;
+      font-size: 16px;
+      line-height: 1;
+      color: #64748b;
+      cursor: pointer;
+    }
+
+    .cancel-selection-btn:hover {
+      background: #f1f5f9;
+      color: #475569;
+    }
+
     .selection-count {
       font-size: 12px;
       color: #64748b;
@@ -425,6 +488,7 @@
       display: flex;
       align-items: center;
       gap: 12px;
+      pointer-events: auto;
     }
 
     .undo-btn {
@@ -460,13 +524,17 @@
           <button class="sort-btn" data-sort="longest">Longest</button>
           <button class="sort-btn" data-sort="shortest">Shortest</button>
         </div>
-        <input type="text" class="search-input" id="searchInput" placeholder="Search...">
         <div class="bulk-actions" id="bulkActions">
+          <button class="cancel-selection-btn" id="cancelSelectionBtn" title="Clear selection">&times;</button>
           <span class="selection-count" id="selectionCount">0 selected</span>
           <button class="bulk-btn" id="copyAllBtn">Copy All</button>
+          <button class="bulk-btn" id="similarBtn">Similar</button>
           <button class="bulk-btn danger" id="deleteSelectedBtn">Delete</button>
         </div>
         <button class="clear-btn" id="clearBtn">Clear</button>
+      </div>
+      <div class="search-container" id="searchContainer">
+        <input type="text" class="search-input" id="searchInput" placeholder="Search...">
       </div>
       <div class="preview-section hidden" id="previewSection">
         <div class="preview-header">
@@ -490,7 +558,7 @@
   <script>
     const STORAGE_KEY = 'saved_tags';
     let currentSort = 'popular';
-    let searchQuery = '';
+    let searchWords = [];
     let selectedTags = new Set();
     let lastDeletedTag = null;
     let undoTimeout = null;
@@ -545,6 +613,19 @@
         lastDeletedTag = null;
         renderTags();
         showToast('Tag restored');
+      }
+    }
+
+    // Dismiss undo toast on user action
+    function dismissUndo() {
+      if (lastDeletedTag) {
+        lastDeletedTag = null;
+        const toast = document.getElementById('toast');
+        toast.classList.remove('show');
+        if (undoTimeout) {
+          clearTimeout(undoTimeout);
+          undoTimeout = null;
+        }
       }
     }
 
@@ -647,6 +728,7 @@
 
     // Toggle tag selection
     function toggleSelection(tagText, tagElement) {
+      dismissUndo();
       if (selectedTags.has(tagText)) {
         selectedTags.delete(tagText);
         tagElement.classList.remove('selected');
@@ -721,10 +803,95 @@
       }
     }
 
-    // Filter tags based on search query
+    // Filter tags based on search words
     function filterTags(tags) {
-      if (!searchQuery) return tags;
-      return tags.filter(([text]) => text.includes(searchQuery.toLowerCase()));
+      if (searchWords.length === 0) return tags;
+
+      // Filter: tag must contain at least one search word
+      const filtered = tags.filter(([text]) => {
+        return searchWords.some(word => text.includes(word.toLowerCase()));
+      });
+
+      // Sort by relevance: exact match > more word matches > fewer matches
+      return filtered.sort((a, b) => {
+        const textA = a[0];
+        const textB = b[0];
+
+        // Check for exact match (all words form the complete tag)
+        const searchPhrase = searchWords.join(' ').toLowerCase();
+        const exactA = textA === searchPhrase;
+        const exactB = textB === searchPhrase;
+        if (exactA && !exactB) return -1;
+        if (exactB && !exactA) return 1;
+
+        // Count how many search words match
+        const matchesA = searchWords.filter(w => textA.includes(w.toLowerCase())).length;
+        const matchesB = searchWords.filter(w => textB.includes(w.toLowerCase())).length;
+        if (matchesA !== matchesB) return matchesB - matchesA;
+
+        // Fall back to original sort order
+        return 0;
+      });
+    }
+
+    // Add a search word
+    function addSearchWord(word) {
+      dismissUndo();
+      const trimmed = word.trim().toLowerCase();
+      if (trimmed && !searchWords.includes(trimmed)) {
+        searchWords.push(trimmed);
+        renderSearchTags();
+        renderTags();
+      }
+    }
+
+    // Remove a search word
+    function removeSearchWord(word) {
+      searchWords = searchWords.filter(w => w !== word);
+      renderSearchTags();
+      renderTags();
+    }
+
+    // Render search tags
+    function renderSearchTags() {
+      const container = document.getElementById('searchContainer');
+      const input = document.getElementById('searchInput');
+
+      // Remove existing search tags
+      container.querySelectorAll('.search-tag').forEach(el => el.remove());
+
+      // Add search tags before input
+      searchWords.forEach(word => {
+        const tag = document.createElement('span');
+        tag.className = 'search-tag';
+        tag.innerHTML = `${word}<button class="search-tag-remove" data-word="${word}">&times;</button>`;
+        container.insertBefore(tag, input);
+      });
+
+      // Add click handlers for remove buttons
+      container.querySelectorAll('.search-tag-remove').forEach(btn => {
+        btn.addEventListener('click', () => {
+          removeSearchWord(btn.dataset.word);
+        });
+      });
+
+      // Update placeholder
+      input.placeholder = searchWords.length > 0 ? 'Add more...' : 'Search...';
+    }
+
+    // Find similar tags (split selected tags into words and search)
+    function findSimilar() {
+      const words = new Set();
+      selectedTags.forEach(tag => {
+        tag.split(/\s+/).forEach(word => {
+          if (word.length > 1) words.add(word.toLowerCase());
+        });
+      });
+
+      searchWords = Array.from(words);
+      renderSearchTags();
+      clearSelection();
+      renderTags();
     }
 
     // Render preview tags
@@ -875,7 +1042,10 @@
     }
 
     // Handle textarea input for live preview
-    document.getElementById('inputText').addEventListener('input', renderPreview);
+    document.getElementById('inputText').addEventListener('input', () => {
+      dismissUndo();
+      renderPreview();
+    });
 
     // Handle save button click
     document.getElementById('saveBtn').addEventListener('click', () => {
@@ -912,11 +1082,22 @@
       showToast(`Saved ${newTags.length} tag(s)`);
     });
 
-    // Handle search input
-    document.getElementById('searchInput').addEventListener('input', (e) => {
-      searchQuery = e.target.value;
-      renderTags();
+    // Handle search input - add word on space or enter
+    const searchInput = document.getElementById('searchInput');
+    searchInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        const value = e.target.value.trim();
+        if (value) {
+          e.preventDefault();
+          addSearchWord(value);
+          e.target.value = '';
+        }
+      } else if (e.key === 'Backspace' && e.target.value === '' && searchWords.length > 0) {
+        // Remove last search word on backspace when input is empty
+        removeSearchWord(searchWords[searchWords.length - 1]);
+      }
     });
+    searchInput.addEventListener('input', dismissUndo);
 
     // Handle sort button clicks
     document.querySelectorAll('.sort-btn').forEach(btn => {
@@ -944,6 +1125,12 @@
 
     // Handle bulk delete button
     document.getElementById('deleteSelectedBtn').addEventListener('click', bulkDelete);
+
+    // Handle similar button
+    document.getElementById('similarBtn').addEventListener('click', findSimilar);
+
+    // Handle cancel selection button
+    document.getElementById('cancelSelectionBtn').addEventListener('click', clearSelection);
 
     // Handle Escape key to deselect all
     document.addEventListener('keydown', (e) => {
