@@ -26,7 +26,7 @@
     }
 
     .left-panel {
-      flex: 1;
+      width: 30%;
       display: flex;
       flex-direction: column;
       background: #ffffff;
@@ -66,8 +66,189 @@
       background: #475569;
     }
 
-    .right-panel {
+    .save-section {
+      border-top: 1px solid #e2e8f0;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .save-section label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      color: #64748b;
+    }
+
+    .save-section select {
+      padding: 8px 10px;
+      border: 1px solid #e2e8f0;
+      border-radius: 2px;
+      font-size: 13px;
+      color: #334155;
+      background: #ffffff;
+      cursor: pointer;
+      outline: none;
+    }
+
+    .save-section select:focus {
+      border-color: #94a3b8;
+    }
+
+    .save-section button {
+      margin-top: 4px;
+    }
+
+    /* Middle Panel - Categories */
+    .middle-panel {
+      width: 10%;
+      min-width: 120px;
+      display: flex;
+      flex-direction: column;
+      background: #ffffff;
+    }
+
+    .middle-header {
+      padding: 10px 14px;
+      border-bottom: 1px solid #e2e8f0;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      color: #64748b;
+    }
+
+    .categories-list {
       flex: 1;
+      overflow-y: auto;
+    }
+
+    .category-item {
+      display: flex;
+      align-items: center;
+      padding: 10px 14px;
+      cursor: pointer;
+      border-bottom: 1px solid #f1f5f9;
+      gap: 10px;
+    }
+
+    .category-item:hover {
+      background: #f8fafc;
+    }
+
+    .category-item.active {
+      background: #e0e7ff;
+      border-left: 3px solid #818cf8;
+      padding-left: 11px;
+    }
+
+    .category-radio {
+      width: 14px;
+      height: 14px;
+      border: 2px solid #cbd5e1;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .category-item.active .category-radio {
+      border-color: #818cf8;
+      background: #818cf8;
+      box-shadow: inset 0 0 0 3px #ffffff;
+    }
+
+    .category-name {
+      flex: 1;
+      font-size: 13px;
+      color: #334155;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .category-count {
+      font-size: 11px;
+      color: #94a3b8;
+    }
+
+    .category-actions {
+      display: none;
+      gap: 4px;
+    }
+
+    .category-item:hover .category-actions {
+      display: flex;
+    }
+
+    .category-item:hover .category-count {
+      display: none;
+    }
+
+    .category-action-btn {
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+      border: none;
+      border-radius: 2px;
+      cursor: pointer;
+      color: #94a3b8;
+    }
+
+    .category-action-btn:hover {
+      background: #e2e8f0;
+      color: #64748b;
+    }
+
+    .category-action-btn.danger:hover {
+      background: #fee2e2;
+      color: #ef4444;
+    }
+
+    .category-action-btn svg {
+      width: 12px;
+      height: 12px;
+    }
+
+    .add-category {
+      padding: 10px 14px;
+      border-top: 1px solid #e2e8f0;
+    }
+
+    .add-category-btn {
+      width: 100%;
+      padding: 8px;
+      background: transparent;
+      border: 1px dashed #cbd5e1;
+      border-radius: 2px;
+      font-size: 12px;
+      color: #64748b;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .add-category-btn:hover {
+      border-color: #94a3b8;
+      background: #f8fafc;
+    }
+
+    .add-category-input {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #818cf8;
+      border-radius: 2px;
+      font-size: 12px;
+      outline: none;
+    }
+
+    .right-panel {
+      width: 60%;
       display: flex;
       flex-direction: column;
       background: #ffffff;
@@ -231,23 +412,6 @@
 
     .empty-state p {
       line-height: 1.6;
-    }
-
-    .clear-btn {
-      padding: 10px 14px;
-      background: transparent;
-      color: #ef4444;
-      border: none;
-      font-size: 11px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.03em;
-      cursor: pointer;
-      margin-left: auto;
-    }
-
-    .clear-btn:hover {
-      background: #fef2f2;
     }
 
     .search-container {
@@ -484,6 +648,21 @@
       background: #dc2626;
     }
 
+    .bulk-move-select {
+      padding: 6px 8px;
+      border: 1px solid #cbd5e1;
+      border-radius: 2px;
+      font-size: 11px;
+      color: #64748b;
+      background: #ffffff;
+      cursor: pointer;
+      outline: none;
+    }
+
+    .bulk-move-select:hover {
+      border-color: #94a3b8;
+    }
+
     .toast.undo {
       display: flex;
       align-items: center;
@@ -513,7 +692,32 @@
   <div class="container">
     <div class="left-panel">
       <textarea id="inputText" placeholder="Paste your text here...&#10;&#10;Split by commas (,) or periods (.)"></textarea>
-      <button id="saveBtn">Save Tags</button>
+      <div class="save-section">
+        <label for="categorySelect">Save to</label>
+        <select id="categorySelect">
+          <option value="">Uncategorized</option>
+        </select>
+        <button id="saveBtn">Save Tags</button>
+      </div>
+    </div>
+
+    <div class="middle-panel">
+      <div class="middle-header">Categories</div>
+      <div class="categories-list" id="categoriesList">
+        <div class="category-item active" data-category="">
+          <span class="category-radio"></span>
+          <span class="category-name">All</span>
+          <span class="category-count" id="allCount">0</span>
+        </div>
+      </div>
+      <div class="add-category">
+        <button class="add-category-btn" id="addCategoryBtn">
+          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+          </svg>
+          Add Category
+        </button>
+      </div>
     </div>
 
     <div class="right-panel">
@@ -529,9 +733,11 @@
           <span class="selection-count" id="selectionCount">0 selected</span>
           <button class="bulk-btn" id="copyAllBtn">Copy All</button>
           <button class="bulk-btn" id="similarBtn">Similar</button>
+          <select class="bulk-move-select" id="bulkMoveSelect" title="Move to category">
+            <option value="" disabled selected>Move to...</option>
+          </select>
           <button class="bulk-btn danger" id="deleteSelectedBtn">Delete</button>
         </div>
-        <button class="clear-btn" id="clearBtn">Clear</button>
       </div>
       <div class="search-container" id="searchContainer">
         <input type="text" class="search-input" id="searchInput" placeholder="Search...">
@@ -557,11 +763,13 @@
 
   <script>
     const STORAGE_KEY = 'saved_tags';
+    const CATEGORIES_KEY = 'saved_categories';
     let currentSort = 'popular';
     let searchWords = [];
     let selectedTags = new Set();
     let lastDeletedTag = null;
     let undoTimeout = null;
+    let currentCategory = ''; // '' means "All"
 
     // Load tags from localStorage
     function loadTags() {
@@ -572,6 +780,234 @@
     // Save tags to localStorage
     function saveTags(tags) {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(tags));
+    }
+
+    // Load categories from localStorage
+    function loadCategories() {
+      const data = localStorage.getItem(CATEGORIES_KEY);
+      return data ? JSON.parse(data) : [];
+    }
+
+    // Save categories to localStorage
+    function saveCategories(categories) {
+      localStorage.setItem(CATEGORIES_KEY, JSON.stringify(categories));
+    }
+
+    // Add a new category
+    function addCategory(name) {
+      const trimmed = name.trim();
+      if (!trimmed) return false;
+
+      const categories = loadCategories();
+      if (categories.includes(trimmed)) {
+        showToast('Category already exists');
+        return false;
+      }
+
+      categories.push(trimmed);
+      saveCategories(categories);
+      renderCategories();
+      updateCategorySelect();
+      updateBulkMoveSelect();
+      showToast(`Category "${trimmed}" created`);
+      return true;
+    }
+
+    // Delete a category
+    function deleteCategory(name) {
+      const categories = loadCategories();
+      const index = categories.indexOf(name);
+      if (index === -1) return;
+
+      // Move tags from this category to uncategorized
+      const tags = loadTags();
+      Object.keys(tags).forEach(tagText => {
+        if (tags[tagText].category === name) {
+          tags[tagText].category = '';
+        }
+      });
+      saveTags(tags);
+
+      categories.splice(index, 1);
+      saveCategories(categories);
+
+      if (currentCategory === name) {
+        currentCategory = '';
+      }
+
+      renderCategories();
+      updateCategorySelect();
+      updateBulkMoveSelect();
+      renderTags();
+      showToast(`Category "${name}" deleted`);
+    }
+
+    // Rename a category
+    function renameCategory(oldName, newName) {
+      const trimmed = newName.trim();
+      if (!trimmed || trimmed === oldName) return false;
+
+      const categories = loadCategories();
+      if (categories.includes(trimmed)) {
+        showToast('Category already exists');
+        return false;
+      }
+
+      const index = categories.indexOf(oldName);
+      if (index === -1) return false;
+
+      // Update tags with this category
+      const tags = loadTags();
+      Object.keys(tags).forEach(tagText => {
+        if (tags[tagText].category === oldName) {
+          tags[tagText].category = trimmed;
+        }
+      });
+      saveTags(tags);
+
+      categories[index] = trimmed;
+      saveCategories(categories);
+
+      if (currentCategory === oldName) {
+        currentCategory = trimmed;
+      }
+
+      renderCategories();
+      updateCategorySelect();
+      updateBulkMoveSelect();
+      renderTags();
+      showToast(`Category renamed to "${trimmed}"`);
+      return true;
+    }
+
+    // Get tag count by category
+    function getTagCountByCategory(category) {
+      const tags = loadTags();
+      if (category === '') {
+        return Object.keys(tags).length;
+      }
+      return Object.values(tags).filter(t => (t.category || '') === category).length;
+    }
+
+    // Render categories list
+    function renderCategories() {
+      const container = document.getElementById('categoriesList');
+      const categories = loadCategories();
+      const allCount = getTagCountByCategory('');
+
+      let html = `
+        <div class="category-item${currentCategory === '' ? ' active' : ''}" data-category="">
+          <span class="category-radio"></span>
+          <span class="category-name">All</span>
+          <span class="category-count">${Object.keys(loadTags()).length}</span>
+        </div>
+        <div class="category-item${currentCategory === '__uncategorized__' ? ' active' : ''}" data-category="__uncategorized__">
+          <span class="category-radio"></span>
+          <span class="category-name">Uncategorized</span>
+          <span class="category-count">${getTagCountByCategory('')}</span>
+        </div>
+      `;
+
+      categories.forEach(cat => {
+        const count = getTagCountByCategory(cat);
+        html += `
+          <div class="category-item${currentCategory === cat ? ' active' : ''}" data-category="${cat}">
+            <span class="category-radio"></span>
+            <span class="category-name">${cat}</span>
+            <span class="category-count">${count}</span>
+            <div class="category-actions">
+              <button class="category-action-btn" data-action="edit" data-category="${cat}" title="Rename">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                </svg>
+              </button>
+              <button class="category-action-btn danger" data-action="delete" data-category="${cat}" title="Delete">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+
+      // Add click handlers for category items
+      container.querySelectorAll('.category-item').forEach(item => {
+        item.addEventListener('click', (e) => {
+          if (e.target.closest('.category-action-btn')) return;
+          currentCategory = item.dataset.category;
+          renderCategories();
+          renderTags();
+        });
+      });
+
+      // Add handlers for edit/delete buttons
+      container.querySelectorAll('.category-action-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const action = btn.dataset.action;
+          const category = btn.dataset.category;
+
+          if (action === 'delete') {
+            if (confirm(`Delete category "${category}"? Tags will be moved to Uncategorized.`)) {
+              deleteCategory(category);
+            }
+          } else if (action === 'edit') {
+            const newName = prompt('Rename category:', category);
+            if (newName !== null) {
+              renameCategory(category, newName);
+            }
+          }
+        });
+      });
+    }
+
+    // Update category select dropdown
+    function updateCategorySelect() {
+      const select = document.getElementById('categorySelect');
+      const categories = loadCategories();
+
+      let html = '<option value="">Uncategorized</option>';
+      categories.forEach(cat => {
+        html += `<option value="${cat}">${cat}</option>`;
+      });
+
+      select.innerHTML = html;
+    }
+
+    // Update bulk move select dropdown
+    function updateBulkMoveSelect() {
+      const select = document.getElementById('bulkMoveSelect');
+      const categories = loadCategories();
+
+      let html = '<option value="" disabled selected>Move to...</option>';
+      html += '<option value="__uncategorized__">Uncategorized</option>';
+      categories.forEach(cat => {
+        html += `<option value="${cat}">${cat}</option>`;
+      });
+
+      select.innerHTML = html;
+    }
+
+    // Move selected tags to a category
+    function bulkMove(category) {
+      const actualCategory = category === '__uncategorized__' ? '' : category;
+      const tags = loadTags();
+      selectedTags.forEach(tagText => {
+        if (tags[tagText]) {
+          tags[tagText].category = actualCategory;
+        }
+      });
+      saveTags(tags);
+      const count = selectedTags.size;
+      selectedTags.clear();
+      updateBulkActions();
+      renderCategories();
+      renderTags();
+      const catName = actualCategory || 'Uncategorized';
+      showToast(`Moved ${count} tag(s) to ${catName}`);
     }
 
     // Parse input text into tags
@@ -611,6 +1047,7 @@
         tags[lastDeletedTag.text] = lastDeletedTag.data;
         saveTags(tags);
         lastDeletedTag = null;
+        renderCategories();
         renderTags();
         showToast('Tag restored');
       }
@@ -652,6 +1089,7 @@
         saveTags(tags);
         selectedTags.delete(tagText);
         updateBulkActions();
+        renderCategories();
         renderTags();
         showToast(`Deleted "${tagText}"`, true);
       }
@@ -780,6 +1218,7 @@
         saveTags(tags);
         selectedTags.clear();
         updateBulkActions();
+        renderCategories();
         renderTags();
         showToast(`Deleted ${count} tag(s)`);
       }
@@ -803,12 +1242,24 @@
       }
     }
 
+    // Filter tags based on category
+    function filterByCategory(tags) {
+      if (currentCategory === '') return tags; // "All" shows everything
+      if (currentCategory === '__uncategorized__') {
+        return tags.filter(([text, data]) => !data.category || data.category === '');
+      }
+      return tags.filter(([text, data]) => data.category === currentCategory);
+    }
+
     // Filter tags based on search words
     function filterTags(tags) {
-      if (searchWords.length === 0) return tags;
+      // First filter by category
+      let filtered = filterByCategory(tags);
 
-      // Filter: tag must contain at least one search word
-      const filtered = tags.filter(([text]) => {
+      if (searchWords.length === 0) return filtered;
+
+      // Then filter by search words: tag must contain at least one search word
+      filtered = filtered.filter(([text]) => {
         return searchWords.some(word => text.includes(word.toLowerCase()));
       });
 
@@ -975,7 +1426,7 @@
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
-            <p>No tags match "${searchQuery}"</p>
+            <p>No tags match "${searchWords.join(' ')}"</p>
           </div>
         `;
         return;
@@ -1050,7 +1501,9 @@
     // Handle save button click
     document.getElementById('saveBtn').addEventListener('click', () => {
       const input = document.getElementById('inputText');
+      const categorySelect = document.getElementById('categorySelect');
       const text = input.value.trim();
+      const category = categorySelect.value;
 
       if (!text) {
         showToast('Please enter some text first');
@@ -1070,16 +1523,22 @@
         if (tags[tag]) {
           tags[tag].count += 1;
           tags[tag].timestamp = now;
+          // Update category if saving to a different one
+          if (category) {
+            tags[tag].category = category;
+          }
         } else {
-          tags[tag] = { count: 1, timestamp: now };
+          tags[tag] = { count: 1, timestamp: now, category: category };
         }
       });
 
       saveTags(tags);
+      renderCategories();
       renderTags();
       input.value = '';
       document.getElementById('previewSection').classList.add('hidden');
-      showToast(`Saved ${newTags.length} tag(s)`);
+      const catName = category || 'Uncategorized';
+      showToast(`Saved ${newTags.length} tag(s) to ${catName}`);
     });
 
     // Handle search input - add word on space or enter
@@ -1109,17 +1568,6 @@
       });
     });
 
-    // Handle clear button click
-    document.getElementById('clearBtn').addEventListener('click', () => {
-      if (confirm('Are you sure you want to clear all saved tags?')) {
-        localStorage.removeItem(STORAGE_KEY);
-        selectedTags.clear();
-        updateBulkActions();
-        renderTags();
-        showToast('All tags cleared');
-      }
-    });
-
     // Handle bulk copy button
     document.getElementById('copyAllBtn').addEventListener('click', bulkCopy);
 
@@ -1128,6 +1576,14 @@
 
     // Handle similar button
     document.getElementById('similarBtn').addEventListener('click', findSimilar);
+
+    // Handle bulk move select
+    document.getElementById('bulkMoveSelect').addEventListener('change', (e) => {
+      if (e.target.value) {
+        bulkMove(e.target.value);
+        e.target.value = ''; // Reset to placeholder
+      }
+    });
 
     // Handle cancel selection button
     document.getElementById('cancelSelectionBtn').addEventListener('click', clearSelection);
@@ -1139,7 +1595,43 @@
       }
     });
 
+    // Handle add category button
+    document.getElementById('addCategoryBtn').addEventListener('click', () => {
+      const addCategoryDiv = document.querySelector('.add-category');
+      const btn = document.getElementById('addCategoryBtn');
+
+      // Replace button with input
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.className = 'add-category-input';
+      input.placeholder = 'Category name...';
+      btn.style.display = 'none';
+      addCategoryDiv.appendChild(input);
+      input.focus();
+
+      const finish = (save) => {
+        if (save && input.value.trim()) {
+          addCategory(input.value);
+        }
+        input.remove();
+        btn.style.display = '';
+      };
+
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          finish(true);
+        } else if (e.key === 'Escape') {
+          finish(false);
+        }
+      });
+
+      input.addEventListener('blur', () => finish(true));
+    });
+
     // Initial render
+    renderCategories();
+    updateCategorySelect();
+    updateBulkMoveSelect();
     renderTags();
   </script>
 </body>
